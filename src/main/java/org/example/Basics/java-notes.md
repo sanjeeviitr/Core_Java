@@ -227,3 +227,169 @@ Do-While:
 do {
 // code
 } while(condition);
+
+--------------------------------------------------
+METHODS / FUNCTIONS
+--------------------------------------------------
+
+A method is a block of code that performs a specific task.
+
+Syntax:
+
+returnType methodName(parameters) {
+// body
+return value;   // if return type is not void
+}
+
+Example:
+int add(int a, int b) {
+return a + b;
+}
+
+Why methods?
+- Code reusability
+- Better readability
+- Modularity
+- Easy debugging
+
+
+--------------------------------------------------
+JAVA IS ALWAYS PASS-BY-VALUE
+--------------------------------------------------
+
+Java passes a COPY of the variable, not the original.
+
+Example:
+
+static void change(int x) {
+x = 100;
+}
+
+public static void main(String[] args) {
+int a = 10;
+change(a);
+System.out.println(a); // 10
+}
+
+Explanation:
+- 'a' is copied into 'x'
+- Changes to 'x' do not affect 'a'
+
+Important:
+Even for objects, Java is still pass-by-value.
+But the value passed is the copy of the reference.
+
+
+--------------------------------------------------
+STATIC vs NON-STATIC METHODS
+--------------------------------------------------
+
+1. Static Method
+
+- Belongs to the class
+- Shared among all objects
+- Can be called without creating object
+- Cannot directly access non-static members
+
+Example:
+
+static void show() {
+System.out.println("Static method");
+}
+
+Call:
+Demo.show();
+
+
+2. Non-Static Method
+
+- Belongs to object (instance)
+- Requires object to call
+- Can access both static and non-static members
+
+Example:
+
+void display() {
+System.out.println("Non-static method");
+}
+
+Call:
+
+public static void main(String[] args) {
+Demo obj = new Demo();
+obj.display();
+}
+
+
+--------------------------------------------------
+VARARGS (Variable Arguments)
+--------------------------------------------------
+
+Varargs allow a method to accept variable number of arguments.
+
+Syntax:
+datatype... variableName
+
+Example:
+
+static void printNumbers(int... numbers) {
+for (int n : numbers) {
+System.out.println(n);
+}
+}
+
+Call:
+printNumbers(1, 2);
+printNumbers(10, 20, 30, 40);
+
+Important:
+- Internally treated as array
+- Only one varargs allowed
+- Must be the last parameter
+
+
+--------------------------------------------------
+METHOD CALL STACK (STACK MEMORY)
+--------------------------------------------------
+
+When a method is called:
+- It is pushed into Stack Memory
+- After execution, it is removed
+
+Stack follows:
+LIFO (Last In First Out)
+
+Example Call Flow:
+
+main()
+└── methodA()
+└── methodB()
+
+Execution order:
+1. methodB finishes
+2. methodA finishes
+3. main finishes
+
+
+--------------------------------------------------
+METHOD SIGNATURE
+--------------------------------------------------
+
+Method Signature =
+Method Name + Parameter List
+
+Example:
+add(int, int)
+
+Signature does NOT include:
+- Return type
+- Access modifier
+- static keyword
+
+Example:
+
+int add(int a, int b)   // signature → add(int, int)
+double add(double a, double b)  // different signature
+
+This concept is important for:
+Method Overloading
