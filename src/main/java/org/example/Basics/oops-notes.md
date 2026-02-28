@@ -661,3 +661,884 @@ Used when:
 - You want common reusable logic
 - But force subclasses to implement specific behavior
 
+# Java Interfaces – Complete Revision Notes
+
+---
+
+# 1️⃣ What is an Interface?
+
+An interface is a blueprint of a class.
+
+It defines:
+- What a class must do
+- But not how it does it (mostly)
+
+It provides abstraction and supports loose coupling.
+
+Example:
+
+```java
+interface Animal {
+    void sound();
+}
+```
+
+Implementation:
+
+```java
+class Dog implements Animal {
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+```
+
+---
+
+# 2️⃣ Core Rules of Interface
+
+## Rule 1: Cannot Instantiate
+
+```java
+Animal a = new Animal();  // ❌ Not allowed
+```
+
+---
+
+## Rule 2: Methods are Public and Abstract by Default
+
+Inside interface:
+
+```java
+void show();
+```
+
+Internally treated as:
+
+```java
+public abstract void show();
+```
+
+---
+
+## Rule 3: Variables are Public Static Final by Default
+
+```java
+interface Test {
+    int x = 10;
+}
+```
+
+Internally:
+
+```java
+public static final int x = 10;
+```
+
+Rules:
+- Must be initialized
+- Cannot be modified
+- Belong to interface
+
+---
+
+# 3️⃣ Interface Inheritance
+
+## Interface → extends Interface
+
+```java
+interface A {
+    void show();
+}
+
+interface B extends A {
+    void display();
+}
+```
+
+An interface can extend multiple interfaces:
+
+```java
+interface C extends A, B {}
+```
+
+---
+
+## Class → implements Interface
+
+```java
+class Demo implements A {}
+```
+
+A class can implement multiple interfaces:
+
+```java
+class Demo implements A, B {}
+```
+
+---
+
+# 4️⃣ Default Methods (Java 8+)
+
+Interfaces can have default methods.
+
+```java
+interface A {
+    default void show() {
+        System.out.println("A");
+    }
+}
+```
+
+Purpose:
+- Backward compatibility
+- Add new methods without breaking old implementations
+
+---
+
+## Default Method Conflict Rule (Very Important)
+
+If two interfaces contain same default method:
+
+```java
+interface A {
+    default void show() {}
+}
+
+interface B {
+    default void show() {}
+}
+
+class C implements A, B {}
+```
+
+Compile-time error due to ambiguity.
+
+Solution:
+
+```java
+class C implements A, B {
+    public void show() {
+        A.super.show();
+    }
+}
+```
+
+Rule:
+If multiple default implementations exist → class MUST override.
+
+---
+
+# 5️⃣ Static Methods in Interface
+
+```java
+interface A {
+    static void show() {
+        System.out.println("A");
+    }
+}
+```
+
+Call using:
+
+```java
+A.show();
+```
+
+Important:
+- Static methods are NOT inherited
+- Cannot call using object
+- Cannot override
+
+---
+
+# 6️⃣ Private Methods (Java 9+)
+
+Interfaces can have private methods.
+
+```java
+interface A {
+    private void helper() {}
+}
+```
+
+Used internally by default methods.
+
+---
+
+# 7️⃣ Polymorphism Using Interface Reference
+
+```java
+interface Animal {
+    void sound();
+}
+
+class Dog implements Animal {
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+
+Animal a = new Dog();
+a.sound();   // Bark
+```
+
+Rules:
+- Reference type → decides accessible methods (compile-time)
+- Object type → decides overridden method execution (runtime)
+
+---
+
+# 8️⃣ Functional Interface
+
+An interface with exactly ONE abstract method.
+
+```java
+@FunctionalInterface
+interface A {
+    void show();
+}
+```
+
+Used with lambda expressions:
+
+```java
+A obj = () -> System.out.println("Hello");
+```
+
+---
+
+# 9️⃣ Marker Interface
+
+Interface with no methods.
+
+Example:
+
+```java
+interface Serializable {}
+```
+
+Used to mark a class for special behavior.
+
+---
+
+# 🔟 Interface vs Abstract Class
+
+| Feature | Interface | Abstract Class |
+|----------|------------|----------------|
+| Multiple inheritance | ✔ Yes | ✘ No |
+| Constructor | ✘ No | ✔ Yes |
+| Variables | public static final only | Any type |
+| Methods | Abstract + default + static | Abstract + Concrete |
+| Access modifiers | Public | Any |
+
+---
+
+# 1️⃣1️⃣ Overriding Rules
+
+When implementing interface method:
+
+- Must be public
+- Cannot reduce visibility
+- Must match method signature
+- Return type must be same or covariant
+
+---
+
+# 1️⃣2️⃣ Static vs Default in Interface
+
+| Feature | Default Method | Static Method |
+|----------|----------------|---------------|
+| Inherited | ✔ Yes | ✘ No |
+| Overridable | ✔ Yes | ✘ No |
+| Call using object | ✔ Yes | ✘ No |
+| Call using interface name | ✘ No | ✔ Yes |
+
+---
+
+# 1️⃣3️⃣ Important Interview Traps
+
+- Interface cannot have constructor.
+- Interface cannot have static block.
+- Interface can have main method (static).
+- Class cannot extend interface (must implement).
+- Interface cannot implement another interface (must extend).
+- Cannot reduce visibility while overriding.
+- Static methods are method hidden, not overridden.
+
+---
+
+# 🔥 Golden Summary
+
+- Interface defines contract.
+- Cannot instantiate.
+- Methods → public abstract by default.
+- Variables → public static final.
+- Supports multiple inheritance.
+- Java 8 → default + static methods.
+- Java 9 → private methods.
+- Enables loose coupling.
+- Core to frameworks (Spring, JDBC, etc).
+- Functional interfaces power lambdas.
+
+# Java Generics & Sorting – Complete Revision Notes
+
+---
+
+## GENERICS
+
+Generics provide compile-time type safety.
+
+They allow writing reusable, type-safe classes.
+
+They work only with object types, not primitives.
+
+Generics exist only at compile time.
+
+---
+
+## WHY GENERICS
+
+### Without Generics
+
+```java
+ArrayList list = new ArrayList();
+list.add("Hello");
+String s = (String) list.get(0); // Casting required
+```
+
+Manual casting required.  
+Risk of ClassCastException at runtime.
+
+---
+
+### With Generics
+
+```java
+ArrayList<String> list = new ArrayList<>();
+String s = list.get(0); // No casting
+```
+
+Type safety enforced at compile time.
+
+---
+
+## BENEFITS OF GENERICS
+
+- Prevents ClassCastException
+- Removes manual casting
+- Safer and cleaner code
+- Better readability
+
+---
+
+## TYPE PARAMETER NAMING
+
+T → Type  
+E → Element  
+K → Key  
+V → Value
+
+These are conventions, not rules.
+
+---
+
+## IMPORTANT GENERIC RULES
+
+Cannot use primitive types.
+
+### Invalid
+
+```java
+List<int> list; // Not allowed
+```
+
+Must use wrapper classes:
+
+```java
+List<Integer> list;
+```
+
+Cannot create object of type parameter:
+
+```java
+T obj = new T(); // Not allowed
+```
+
+Reason:
+
+Type erasure removes actual type at runtime.
+
+---
+
+## TYPE ERASURE
+
+Java removes generic type information at runtime.
+
+Generics exist only during compilation.
+
+### Example
+
+```java
+List<String>
+List<Integer>
+```
+
+Both become:
+
+```java
+List
+```
+
+at runtime.
+
+Because of type erasure:
+
+- Cannot use `new T()`
+- Cannot check `instanceof List<String>`
+- Cannot create generic arrays directly
+
+Generics are a compile-time feature only.
+
+---
+
+## BOUNDED TYPES
+
+### Upper Bound
+
+```java
+class Test<T extends Number>
+```
+
+T must be Number or its subclass.
+
+Examples:
+
+- Integer
+- Double
+- Float
+
+Allows calling methods of Number.
+
+---
+
+## WILDCARDS
+
+Wildcard means unknown type.
+
+---
+
+### UNBOUNDED WILDCARD
+
+```java
+List<?> list;
+```
+
+Can read elements as Object.  
+Cannot add elements (except null).
+
+---
+
+### UPPER BOUND WILDCARD
+
+```java
+List<? extends Number>
+```
+
+Accepts Number or its subclass.
+
+Can read.  
+Cannot add.
+
+Reason:
+
+Actual type could be Integer, Double, etc.
+
+---
+
+### LOWER BOUND WILDCARD
+
+```java
+List<? super Integer>
+```
+
+Accepts Integer or its parent.
+
+Can add Integer.  
+Reading returns Object.
+
+---
+
+### Rule to Remember
+
+Producer → extends  
+Consumer → super
+
+---
+
+## COMPARABLE
+
+Used to define natural ordering.
+
+Implemented inside the class.
+
+Only one natural ordering allowed.
+
+Interface:
+
+```java
+public interface Comparable<T> {
+    int compareTo(T o);
+}
+```
+
+---
+
+## COMPARETO RULES
+
+Negative → this < other  
+Zero → equal  
+Positive → this > other
+
+---
+
+## COMPARABLE EXAMPLE
+
+```java
+class Student implements Comparable<Student> {
+
+    int marks;
+
+    @Override
+    public int compareTo(Student other) {
+        return Integer.compare(this.marks, other.marks);
+    }
+}
+```
+
+---
+
+## USED IN
+
+- TreeSet
+- TreeMap
+- Collections.sort()
+
+Important:
+
+TreeSet uses compareTo() for sorting and duplicate detection.
+
+If compareTo() returns 0 → Treated as duplicate.
+
+TreeSet does not rely on equals().
+
+---
+
+## COMPARATOR
+
+Used for custom sorting logic.
+
+Defined outside the class.
+
+Allows multiple sorting strategies.
+
+Method:
+
+```java
+int compare(T o1, T o2);
+```
+
+---
+
+## COMPARATOR EXAMPLE
+
+```java
+Comparator<Student> comp =
+    (s1, s2) -> Integer.compare(s1.marks, s2.marks);
+```
+
+Sorting example:
+
+```java
+list.sort(Comparator.comparing(s -> s.name));
+```
+
+---
+
+## COMPARABLE vs COMPARATOR
+
+Defined in:
+
+Comparable → Same class  
+Comparator → Separate class or lambda
+
+Method:
+
+Comparable → compareTo()  
+Comparator → compare()
+
+Natural ordering:
+
+Comparable → Yes  
+Comparator → No
+
+Multiple sorting logic:
+
+Comparable → No  
+Comparator → Yes
+
+---
+
+## IMPORTANT GENERIC CONCEPT
+
+List<Integer> is NOT List<Number>.
+
+Generics are invariant.
+
+Even though Integer extends Number,  
+List<Integer> does not extend List<Number>.
+
+---
+
+## SUMMARY
+
+Generics provide compile-time type safety.  
+Generics use type erasure.  
+Cannot instantiate new T().  
+Cannot use primitives in generics.  
+Wildcards provide flexibility.  
+Comparable defines natural ordering.  
+Comparator defines custom ordering.  
+TreeSet uses compareTo() for sorting and duplicate detection.
+
+# Java Enum – Complete Revision Notes
+
+---
+
+## 1️⃣ What is Enum?
+
+`enum` is a special type of class used to define a fixed set of constants.
+
+Used when values are:
+
+- Limited
+- Predefined
+- Constant
+- Controlled
+
+### Example
+
+```java
+enum Day {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY
+}
+```
+
+Usage:
+
+```java
+Day d = Day.MONDAY;
+```
+
+---
+
+## 2️⃣ Why Use Enum?
+
+### ❌ Without Enum
+
+```java
+String status = "SUCCESS";
+```
+
+Problems:
+
+- Typo possible
+- Any random string allowed
+- No compile-time safety
+- Hard to maintain
+
+---
+
+### ✅ With Enum
+
+```java
+enum Status {
+    SUCCESS,
+    FAILURE
+}
+```
+
+Usage:
+
+```java
+Status status = Status.SUCCESS;
+```
+
+Benefits:
+
+- Compile-time safety
+- Only predefined values allowed
+- Cleaner and safer code
+- Type-safe constants
+
+---
+
+## 3️⃣ How Enum Works Internally
+
+Enum is:
+
+- A special class
+- Extends `java.lang.Enum`
+- Implicitly final
+- Constructor is always private
+- Constants are `public static final`
+- Objects created at class loading time
+
+Each constant = one object.
+
+### Example
+
+```java
+enum Test {
+    A,
+    B,
+    C;
+}
+```
+
+👉 3 objects are created at class loading.
+
+---
+
+## 4️⃣ Enum Constructor
+
+- Always private
+- Cannot create object manually
+- Called automatically for each constant
+
+```java
+enum Status {
+    SUCCESS(200),
+    FAILURE(500);
+
+    int code;
+
+    Status(int code) {
+        this.code = code;
+    }
+}
+```
+
+---
+
+## 5️⃣ Enum Can Have
+
+| Feature | Allowed? |
+|----------|----------|
+| Variables | ✔ Yes |
+| Methods | ✔ Yes |
+| Constructor | ✔ Yes (private only) |
+| Implement Interface | ✔ Yes |
+| Extend Class | ❌ No |
+
+---
+
+## 6️⃣ Enum with Methods
+
+```java
+enum Status {
+    SUCCESS,
+    FAILURE;
+
+    void print() {
+        System.out.println(this);
+    }
+}
+```
+
+Usage:
+
+```java
+Status.SUCCESS.print();
+```
+
+---
+
+## 7️⃣ Enum with Abstract Method (Advanced)
+
+Enum can have abstract methods.
+
+Each constant must implement it.
+
+```java
+enum Operation {
+
+    ADD {
+        int apply(int a, int b) {
+            return a + b;
+        }
+    },
+
+    SUBTRACT {
+        int apply(int a, int b) {
+            return a - b;
+        }
+    };
+
+    abstract int apply(int a, int b);
+}
+```
+
+---
+
+## 8️⃣ Built-in Methods
+
+Every enum has:
+
+- `values()` → returns all constants
+- `valueOf(String name)`
+- `ordinal()` → position index (starts from 0)
+- `name()` → constant name
+
+### Example
+
+```java
+System.out.println(Status.SUCCESS.ordinal()); // 0
+```
+
+---
+
+## 9️⃣ Switch with Enum
+
+```java
+switch (status) {
+    case SUCCESS:
+        break;
+    case FAILURE:
+        break;
+}
+```
+
+---
+
+## 🔟 Important Interview Points
+
+- Enum constants are `public static final`
+- Enum constructor is always private
+- Enum cannot be extended
+- Enum objects are created once
+- Enum is thread-safe
+- Number of enum objects = number of constants
+- Created at class loading time
+
+---
+
+## 🔥 Golden Summary
+
+- Enum = Type-safe, fixed set of singleton constants
+- Better than using String for constant values
+- Provides compile-time safety
+- Can hold state and behavior
+- Objects created once at class loading  
