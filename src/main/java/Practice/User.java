@@ -1,4 +1,4 @@
-package tests2;
+package Practice;
 
 public class User {
 
