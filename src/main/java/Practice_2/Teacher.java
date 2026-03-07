@@ -2,17 +2,21 @@ package Practice_2;
 
 public class Teacher implements Comparable<Teacher> {
 
-    int age;
+    String id;
     String name;
+    int salary;
 
-    public Teacher(int age, String name) {
-        this.age = age;
+    public Teacher(String id, String name, int salary) {
+        this.id = id;
         this.name = name;
+        this.salary = salary;
     }
+
+
 
     @Override
     public int compareTo(Teacher o) {
-        return this.age-o.age;
+        return this.id.compareTo(o.id);
     }
 
 //    public String compareTo(Teacher o){
